@@ -1,26 +1,41 @@
-# Google Cloud Setup  Docker and Nginx & Cerbot for n8n
+```markdown
+# Google Cloud Setup: Docker, Nginx & Certbot for n8n
 
-### Step 1: Update the system
+## Step 1: Update the system
 ```bash
-sudo apt update
+sudo apt update && sudo apt upgrade -y
 ```
 
-### Step 2: Install Docker
+## Step 2: Create and activate a 2GB swap file
 ```bash
-sudo apt install docker.io
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 ```
 
-### Step 3: Start Docker service
+## Step 3: Make swap permanent
+```bash
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+## Step 4: Verify swap activation
+```bash
+free -h
+```
+
+## Step 5: Install Docker
+```bash
+sudo apt install docker.io -y
+```
+
+## Step 6: Start and enable Docker service
 ```bash
 sudo systemctl start docker
-```
-
-### Step 4: Enable Docker service
-```bash
 sudo systemctl enable docker
 ```
 
-### Step 5: Run N8N Docker Container
+## Step 7: Run N8N Docker Container
 ```bash
 sudo docker run -d --restart unless-stopped -it \
 --name n8n \
@@ -32,12 +47,12 @@ sudo docker run -d --restart unless-stopped -it \
 n8nio/n8n
 ```
 
-### Step 6: Install Nginx
+## Step 8: Install Nginx
 ```bash
-sudo apt install nginx
+sudo apt install nginx -y
 ```
 
-### Step 7: Create an Nginx configuration file for N8N
+## Step 9: Create an Nginx configuration file for N8N
 ```bash
 sudo nano /etc/nginx/sites-available/n8n
 ```
@@ -71,34 +86,34 @@ Save and exit using:
 CTRL+O, ENTER, CTRL+X
 ```
 
-### Step 8: Enable the Nginx configuration
+## Step 10: Enable the Nginx configuration
 ```bash
 sudo ln -s /etc/nginx/sites-available/n8n /etc/nginx/sites-enabled/
 ```
 
-### Step 9: Test Nginx configuration
+## Step 11: Test Nginx configuration
 ```bash
 sudo nginx -t
 ```
 
-### Step 10: Restart Nginx service
+## Step 12: Restart Nginx service
 ```bash
 sudo systemctl restart nginx
 ```
 
-### Step 11: Install Certbot for SSL Certificates
+## Step 13: Install Certbot for SSL Certificates
 ```bash
-sudo apt install certbot python3-certbot-nginx
+sudo apt install certbot python3-certbot-nginx -y
 ```
 
-### Step 12: Obtain SSL Certificate
+## Step 14: Obtain SSL Certificate
 ```bash
 sudo certbot --nginx -d your-domain.com
 ```
 
-
-
-### Step 14: Restart Nginx service
+## Step 15: Restart Nginx service
 ```bash
 sudo systemctl restart nginx
+```
+```
 
