@@ -35,15 +35,15 @@ sudo systemctl start docker
 sudo systemctl enable docker
 ```
 
-## Step 7: Run N8N Docker Container
+## Step 7: Run N8N Docker Container  with Volume Persistence
 ```bash
 sudo docker run -d --restart unless-stopped -it \
 --name n8n \
 -p 5678:5678 \
--e N8N_HOST="your-domain.com" \
--e WEBHOOK_TUNNEL_URL="https://your-domain.com/" \
--e WEBHOOK_URL="https://your-domain.com/" \
--v ~/.n8n:/root/.n8n \
+-e N8N_HOST="n8nevano.ddns.net" \
+-e WEBHOOK_TUNNEL_URL="https://n8nevano.ddns.net/" \
+-e WEBHOOK_URL="https://n8nevano.ddns.net/" \
+-v n8n_data:/home/node/.n8n \
 n8nio/n8n
 ```
 
@@ -60,7 +60,7 @@ Add the following content:
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name n8nevano.ddns.net;
 
     location / {
         proxy_pass http://localhost:5678;
@@ -88,6 +88,7 @@ CTRL+O, ENTER, CTRL+X
 
 ## Step 10: Enable the Nginx configuration
 ```bash
+sudo rm /etc/nginx/sites-enabled/n8n
 sudo ln -s /etc/nginx/sites-available/n8n /etc/nginx/sites-enabled/
 ```
 
@@ -108,7 +109,7 @@ sudo apt install certbot python3-certbot-nginx -y
 
 ## Step 14: Obtain SSL Certificate
 ```bash
-sudo certbot --nginx -d your-domain.com
+sudo certbot --nginx -d n8nevano.ddns.net
 ```
 
 ## Step 15: Restart Nginx service
